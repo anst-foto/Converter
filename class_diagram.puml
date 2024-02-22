@@ -1,0 +1,91 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface Object {
++ {abstract} toString() : string
+}
+
+Object <|.. Unit
+class Unit {
+# value : double
+
++ Unit(value : double)
+
++ getValue() : double
++ toString() : string
+}
+
+Unit <|-- Metr
+class Metr {
++ Metr(metr : double)
+
++ toString() : string
+}
+
+Unit <|-- Mile
+class Mile {
++ Mile(mile : double)
+
++ toString() : string
+}
+
+Object <--o IConvert
+interface IConvert{
++ {abstract} convert() : Object
+}
+
+Object <--o UnitConverter
+Unit <--* UnitConverter
+IConvert <|.. UnitConverter
+class UnitConverter {
+# unit : Unit
+# ratio : double
+
++ UnitConverter(unit : Unit, ratio : double)
+
++ convert() : Object
+}
+
+Object <--o AbstractUnitConverter
+UnitConverter <--* AbstractUnitConverter
+IConvert <|.. AbstractUnitConverter
+abstract class AbstractUnitConverter {
+# converter : UnitConverter
+# ratio : double
+
+# AbstractUnitConverter(ratio : double)
+
++ convert() : Object
+}
+
+Metr <--o ConverterMetrToMile
+AbstractUnitConverter <|-- ConverterMetrToMile
+class ConverterMetrToMile {
+- {static} RATIO : double
+
++ ConverterMetrToMile(metr : Metr)
+}
+
+Mile <--o ConverterMileToMetr
+AbstractUnitConverter <|-- ConverterMileToMetr
+class ConverterMileToMetr {
+- {static} RATIO : double
+
++ ConverterMileToMetr(mile : Mile)
+}
+
+Metr <--o Converter
+Mile <--o Converter
+ConverterMetrToMile <--* Converter
+ConverterMileToMetr <--* Converter
+class Converter {
+- converterMileToMetr : ConverterMileToMetr
+- converterMetrToMile : ConverterMetrToMile
+
++ Converter()
+
++ convertMileToMetr(mile : Mile) : Metr
++ converterMetrToMile(metr : Metr) : Mile
+}
+
+@enduml
